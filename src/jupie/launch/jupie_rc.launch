@@ -1,0 +1,10 @@
+<launch>
+  <node name="driver_mpu9250_node" pkg="driver_mpu9250" type="driver_mpu9250_rpi" output="screen">
+	<param name="interrupt_gpio_pin" type="int" value="14" />
+  </node>
+</launch>
+
+    <!-- <param name="my_integer" type="int" value="7" /> -->
+    <!-- <param name="my_float" type="double" value="3.14" /> -->
+    <!-- <param name="my_string" type="str" value="hello" /> -->
+    <!-- <node name="jupir" pkg="jupie" type="main.py" output="screen"/> -->
