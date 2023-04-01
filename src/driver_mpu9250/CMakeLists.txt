@@ -45,10 +45,9 @@ if(pigpiod)
     ## Add cmake target dependencies of the executable
     ## same as for the library above
     add_dependencies(${PROJECT_NAME}_rpi_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+	# Set up installation for RPi driver
+	install(TARGETS ${PROJECT_NAME}_rpi_node
+      RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 else()
     message(WARNING "PIGPIO not found. Skipping rpi_node.")
 endif()
-
-# Set up installation for RPi driver
-install(TARGETS ${PROJECT_NAME}_rpi_node
-    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
