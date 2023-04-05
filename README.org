@@ -1,0 +1,18 @@
+
+#+STARTUP: showeverything
+#+TITLE: Mini Jupiter RC-Car
+
+
+
+- Launches main modules for work in autonomous mode
+- the base controller, uses dwa_local_planner (by default included in launch)
+
+
+** Actuators
+
+*** Orientation
+	- ros-driver_mpu9250
+	- ros-calibration_imu
+	- imu_filter_madgwick
+
+** Dynamic frame

@@ -16,6 +16,7 @@ catkin_package()
 # Set include directories.
 include_directories(${catkin_INCLUDE_DIRS})
 
+
 # Build for RPi driver
 if(pigpiod)
     message(STATUS "PIGPIO found. Building rpi_node.")

@@ -5,6 +5,9 @@
 #include <sensor_msgs_ext/magnetometer.h>
 #include <sensor_msgs_ext/temperature.h>
 
+#include <sensor_msgs/Imu.h>
+#include <sensor_msgs/MagneticField.h>
+
 #include <cmath>
 
 // CONSTRUCTORS
@@ -33,16 +36,22 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
     int param_accel_fsr = private_node.param<int>("accel_fsr", 0);
     float param_max_data_rate = private_node.param<float>("max_data_rate", 8000.0F);
 
+	ros_node::publish_raw = = private_node.param<bool>("publish_raw", false);
+
     // Read calibrations.
     ros_node::m_calibration_accelerometer.load(private_node, "calibration/accelerometer");
     ros_node::m_calibration_magnetometer.load(private_node, "calibration/magnetometer");
+
+	// RAW data
+    ros_node::m_publisher_imu_raw = ros_node::m_node->advertise<sensor_msgs::Imu>("imu/data_raw", 1);
+    ros_node::m_publisher_mag_raw = ros_node::m_node->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
 
     // Set up data publishers.
     ros_node::m_publisher_accelerometer = ros_node::m_node->advertise<sensor_msgs_ext::accelerometer>("imu/accelerometer", 1);
     ros_node::m_publisher_gyroscope = ros_node::m_node->advertise<sensor_msgs_ext::gyroscope>("imu/gyroscope", 1);
     ros_node::m_publisher_magnetometer = ros_node::m_node->advertise<sensor_msgs_ext::magnetometer>("imu/magnetometer", 1);
     ros_node::m_publisher_temperature = ros_node::m_node->advertise<sensor_msgs_ext::temperature>("imu/temperature", 1);
-    
+
     // Initialize the driver and set parameters.
     try
     {

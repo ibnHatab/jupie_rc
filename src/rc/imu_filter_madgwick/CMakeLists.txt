@@ -14,7 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
 )
 
-find_package(Boost REQUIRED COMPONENTS system thread)
+#find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost)
 
 # Generate dynamic parameters
 generate_dynamic_reconfigure_options(cfg/ImuFilterMadgwick.cfg)
