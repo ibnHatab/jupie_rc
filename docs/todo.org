@@ -1,0 +1,13 @@
+
+
+
+
+** Controll
+
+*** ABS
+	https://www.youtube.com/watch?v=S8aaMkqtxXw&ab_channel=MATLAB
+
+** Perception
+
+*** TODO MOT
+	https://www.youtube.com/watch?v=jbfpwpqVDI8&list=PLn8PRpmsu08rLRGrnF-S6TyGrmcA2X7kg&index=5&ab_channel=MATLAB
