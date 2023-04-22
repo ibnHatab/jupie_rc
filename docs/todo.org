@@ -11,8 +11,11 @@
 
 *** TODO MOT
 	https://www.youtube.com/watch?v=jbfpwpqVDI8&list=PLn8PRpmsu08rLRGrnF-S6TyGrmcA2X7kg&index=5&ab_channel=MATLAB
-
+	https://www.youtube.com/watch?v=IIt1LHIHYc4&list=PLn8PRpmsu08ryYoBpEKzoMOveSTyS-h4a&index=5&ab_channel=MATLAB
 ** Navigation
 
 *** RL fast driving
 	https://sites.google.com/view/fastrlap/
+
+*** Pose estimation
+	https://www.youtube.com/watch?v=hN8dL55rP5I&list=PLn8PRpmsu08ryYoBpEKzoMOveSTyS-h4a&index=3&ab_channel=MATLAB
