@@ -6,7 +6,7 @@
 - Launches main modules for work in autonomous mode
 - the base controller, uses dwa_local_planner (by default included in launch)
 
-
+* Platform
 ** Actuators
 
 *** Orientation
@@ -43,6 +43,25 @@ calibration units: m/s^2
 *** Host
 	: roslaunch imu_filter_madgwick imu_filter_madgwick.launch
 
-*** jupie_rc
+*** jupie_rc ROS master
 	: export ROS_MASTER_URI=http://user:11311/
 	: roslaunch jupie jupie_rc.launch publish_raw:=false
+
+** Arduino ECU
+   Development Board Arduino Nano Compatible (ATmega328p + CH340)
+   hadles motor and direction servo PWM and rotary encoder.
+   It use old bootloader compatible with arduino:avr:pro BSP.
+
+*** Interface
+   - add rosserial module
+	 : git clone https://github.com/ros-drivers/rosserial.git
+   - generate library bindings and messages
+     : rosrun rosserial_arduino make_libraries.py ~/Arduino/libraries/
+
+   - compile and upload sketch file with arduino/Makefile
+	 : arduino-cli sketch new hello_node
+	 : make SRC=hello_node/ build
+	 Stop serial node and upload firmware
+	 : make SRC=hello_node/ upload
+	 Start serial node and test
+	 : rostopic echo /chatter
