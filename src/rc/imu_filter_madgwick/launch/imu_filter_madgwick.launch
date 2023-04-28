@@ -11,6 +11,7 @@
     args="load imu_filter_madgwick/ImuFilterNodelet imu_manager"
     output="screen">
 
+    <param name="use_mag" value="false"/>
     <param name="publish_tf" value="false"/>
 
   </node>

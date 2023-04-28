@@ -3,7 +3,6 @@
 #+TITLE: Mini Jupiter RC-Car
 
 
-
 - Launches main modules for work in autonomous mode
 - the base controller, uses dwa_local_planner (by default included in launch)
 
@@ -15,4 +14,35 @@
 	- ros-calibration_imu
 	- imu_filter_madgwick
 
+*** Calibration
+	Magnetometer, Timisoara
+	: rosrun calibration_imu magnetometer
+	- total field strength, in nT: 48735.3 nT
+	  #+begin_example
+calibration units: tesla (T)
+
+ 1.0704277446 -0.0554687100 -0.0751259770 -0.0001229154
+-0.0554687100  0.9700723220  0.0656101161 -0.0002405948
+-0.0751259770  0.0656101161  0.8717398362 -0.0001045596
+ 0.0000000000  0.0000000000  0.0000000000  1.0000000000
+
+	  #+end_example
+	Accelerometer
+	#+begin_example
+calibration units: m/s^2
+
+ 1.000546  0.000000  0.000000 -0.249843
+ 0.000000  0.997507  0.000000 -0.155362
+ 0.000000  0.000000  0.982808  0.067903
+ 0.000000  0.000000  0.000000  1.000000
+	#+end_example
+
 ** Dynamic frame
+
+** Launch
+*** Host
+	: roslaunch imu_filter_madgwick imu_filter_madgwick.launch
+
+*** jupie_rc
+	: export ROS_MASTER_URI=http://user:11311/
+	: roslaunch jupie jupie_rc.launch publish_raw:=false
