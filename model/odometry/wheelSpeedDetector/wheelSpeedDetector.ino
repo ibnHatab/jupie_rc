@@ -1,4 +1,4 @@
-//
+// HW: wheel with 6 spikes and 3 white segments for IR sensor reflection
 // model: readTchometerFromSerial.m
 // BSP
 // HW-511 TCRT5000 Infrared track sensor
