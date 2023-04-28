@@ -1,6 +1,9 @@
 <launch>
   <node name="driver_mpu9250_node" pkg="driver_mpu9250" type="driver_mpu9250_rpi" output="screen">
 	<param name="interrupt_gpio_pin" type="int" value="14" />
+	<param name="publish_raw" type="bool" value="true" />
+	<rosparam param="calibration/accelerometer">[1.000546, 0.000000, 0.000000, -0.249843, 0.000000, 0.997507, 0.000000, -0.155362, 0.000000, 0.000000, 0.982808, 0.067903, 0.000000, 0.000000, 0.000000, 1.000000]</rosparam>
+	<rosparam param="calibration/magnetometer">[1.0704277446, -0.0554687100, -0.0751259770, -0.0001229154, -0.0554687100, 0.9700723220, 0.0656101161, -0.0002405948, -0.0751259770, 0.0656101161, 0.8717398362, -0.0001045596, 0.0000000000, 0.0000000000, 0.0000000000, 1.0000000000]</rosparam>
   </node>
 </launch>
 

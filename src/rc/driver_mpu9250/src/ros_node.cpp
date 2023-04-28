@@ -36,21 +36,24 @@ ros_node::ros_node(std::shared_ptr<driver> driver, int argc, char **argv)
     int param_accel_fsr = private_node.param<int>("accel_fsr", 0);
     float param_max_data_rate = private_node.param<float>("max_data_rate", 8000.0F);
 
-	ros_node::publish_raw = = private_node.param<bool>("publish_raw", false);
+	ros_node::publish_raw = private_node.param<bool>("publish_raw", false);
 
     // Read calibrations.
     ros_node::m_calibration_accelerometer.load(private_node, "calibration/accelerometer");
     ros_node::m_calibration_magnetometer.load(private_node, "calibration/magnetometer");
 
 	// RAW data
-    ros_node::m_publisher_imu_raw = ros_node::m_node->advertise<sensor_msgs::Imu>("imu/data_raw", 1);
-    ros_node::m_publisher_mag_raw = ros_node::m_node->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
+	if(ros_node::publish_raw) {
+		ros_node::m_publisher_imu_raw = ros_node::m_node->advertise<sensor_msgs::Imu>("imu/data_raw", 1);
+		ros_node::m_publisher_mag_raw = ros_node::m_node->advertise<sensor_msgs::MagneticField>("imu/mag", 1);
+	} else {
+		// Set up data publishers.
+		ros_node::m_publisher_accelerometer = ros_node::m_node->advertise<sensor_msgs_ext::accelerometer>("imu/accelerometer", 1);
+		ros_node::m_publisher_gyroscope = ros_node::m_node->advertise<sensor_msgs_ext::gyroscope>("imu/gyroscope", 1);
+		ros_node::m_publisher_magnetometer = ros_node::m_node->advertise<sensor_msgs_ext::magnetometer>("imu/magnetometer", 1);
+	}
 
-    // Set up data publishers.
-    ros_node::m_publisher_accelerometer = ros_node::m_node->advertise<sensor_msgs_ext::accelerometer>("imu/accelerometer", 1);
-    ros_node::m_publisher_gyroscope = ros_node::m_node->advertise<sensor_msgs_ext::gyroscope>("imu/gyroscope", 1);
-    ros_node::m_publisher_magnetometer = ros_node::m_node->advertise<sensor_msgs_ext::magnetometer>("imu/magnetometer", 1);
-    ros_node::m_publisher_temperature = ros_node::m_node->advertise<sensor_msgs_ext::temperature>("imu/temperature", 1);
+	ros_node::m_publisher_temperature = ros_node::m_node->advertise<sensor_msgs_ext::temperature>("imu/temperature", 1);
 
     // Initialize the driver and set parameters.
     try
@@ -168,16 +171,27 @@ void ros_node::deinitialize_driver()
 // CALLBACKS
 void ros_node::data_callback(driver::data data)
 {
+	// Raw values
+	sensor_msgs::Imu imu_raw{};
+	sensor_msgs::MagneticField mag_raw{};
+
     // Create accelerometer message.
     sensor_msgs_ext::accelerometer message_accel;
     // Set accelerations (convert from g's to m/s^2)
     message_accel.x = static_cast<double>(data.accel_x) * 9.80665;
     message_accel.y = static_cast<double>(data.accel_y) * 9.80665;
     message_accel.z = static_cast<double>(data.accel_z) * 9.80665;
+	imu_raw.linear_acceleration.x = message_accel.x;
+	imu_raw.linear_acceleration.y = message_accel.y;
+	imu_raw.linear_acceleration.z = message_accel.z;
+
+
     // Apply calibration.
     ros_node::m_calibration_accelerometer.calibrate(message_accel.x, message_accel.y, message_accel.z);
     // Publish message.
-    ros_node::m_publisher_accelerometer.publish(message_accel);
+	if(not ros_node::publish_raw)
+		ros_node::m_publisher_accelerometer.publish(message_accel);
+
 
     // Create gyroscope message.
     sensor_msgs_ext::gyroscope message_gyro;
@@ -185,6 +199,11 @@ void ros_node::data_callback(driver::data data)
     message_gyro.x = static_cast<double>(data.gyro_x) * M_PI / 180.0;
     message_gyro.y = static_cast<double>(data.gyro_y) * M_PI / 180.0;
     message_gyro.z = static_cast<double>(data.gyro_z) * M_PI / 180.0;
+	imu_raw.angular_velocity.x = message_gyro.x;
+	imu_raw.angular_velocity.y = message_gyro.y;
+	imu_raw.angular_velocity.z = message_gyro.z;
+
+
     // If gyroscope calibration is running, add uncalibrate data to window.
     if(ros_node::f_gyroscope_calibrating)
     {
@@ -193,7 +212,15 @@ void ros_node::data_callback(driver::data data)
     // Apply calibration.
     ros_node::m_calibration_gyroscope.calibrate(message_gyro.x, message_gyro.y, message_gyro.z);
     // Publish message.
-    ros_node::m_publisher_gyroscope.publish(message_gyro);
+	if(not ros_node::publish_raw)
+		ros_node::m_publisher_gyroscope.publish(message_gyro);
+
+	if(ros_node::publish_raw) {
+		imu_raw.header.stamp = ros::Time().now();
+		imu_raw.header.seq = publisher_imu_raw_seq++;
+		imu_raw.header.frame_id = "imu";
+		ros_node::m_publisher_imu_raw.publish(imu_raw);
+	}
 
     // Check if there was a magneto overflow.
     if(std::isnan(data.magneto_x) == false)
@@ -204,10 +231,22 @@ void ros_node::data_callback(driver::data data)
         message_mag.x = static_cast<double>(data.magneto_x) * 0.000001;
         message_mag.y = static_cast<double>(data.magneto_y) * 0.000001;
         message_mag.z = static_cast<double>(data.magneto_z) * 0.000001;
+
+		mag_raw.magnetic_field.x = message_mag.x;
+		mag_raw.magnetic_field.y = message_mag.y;
+		mag_raw.magnetic_field.z = message_mag.z;
+
         // Apply calibration.
         ros_node::m_calibration_magnetometer.calibrate(message_mag.x, message_mag.y, message_mag.z);
         // Publish message.
-        ros_node::m_publisher_magnetometer.publish(message_mag);
+		if(not ros_node::publish_raw) {
+			ros_node::m_publisher_magnetometer.publish(message_mag);
+		} else {
+			mag_raw.header.stamp = ros::Time().now();
+			mag_raw.header.seq = publisher_mag_raw_seq++;
+			mag_raw.header.frame_id = "imu";
+			ros_node::m_publisher_mag_raw.publish(mag_raw);
+		}
     }
 
     // Create temperature message.

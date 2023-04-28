@@ -55,9 +55,11 @@ private:
     std::shared_ptr<ros::NodeHandle> m_node;
 
     // PUBLISHERS - DATA
-	ros::Publisher::m_publisher_imu_raw;
-	ros::Publisher::m_publisher_mag_raw;
 	bool publish_raw;
+	uint32_t publisher_imu_raw_seq = 0;
+	uint32_t publisher_mag_raw_seq = 0;
+	ros::Publisher m_publisher_imu_raw;
+	ros::Publisher m_publisher_mag_raw;
 
     /// \brief Publisher for accelerometer data.
     ros::Publisher m_publisher_accelerometer;
