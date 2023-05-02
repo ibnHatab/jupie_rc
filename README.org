@@ -3,8 +3,6 @@
 #+TITLE: Mini Jupiter RC-Car
 
 
-- Launches main modules for work in autonomous mode
-- the base controller, uses dwa_local_planner (by default included in launch)
 
 * Platform
 ** Actuators
@@ -65,3 +63,15 @@ calibration units: m/s^2
 	 : make SRC=hello_node/ upload
 	 Start serial node and test
 	 : rostopic echo /chatter
+
+* REFERENCES
+  - [1] Development of a mechatronical platform for AUTOSAR
+    The ball-balancing robot Master of Science Thesis, ANDRÉ ALSTRIN, EMIL SUNDELL
+	https://publications.lib.chalmers.se/records/fulltext/225052/225052.pdf
+
+* TODO FIXES [0/4]
+  - [ ] recalibrate gravitometer
+  - [ ] move filter to RC
+  - [ ] Launches main modules for work in autonomous mode
+  - [ ] the base controller, uses dwa_local_planner (by default included in launch)
+  - [ ] sphinx documentation reindexing ref. [1]
