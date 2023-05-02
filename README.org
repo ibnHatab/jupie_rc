@@ -3,8 +3,21 @@
 #+TITLE: Mini Jupiter RC-Car
 
 
-- Launches main modules for work in autonomous mode
-- the base controller, uses dwa_local_planner (by default included in launch)
+
+* HW Platform
+
+** Paspberry Pi 4b
+
+*** Grove IMU 9DOF
+
+	| IMU | RPi4      | Col   |
+	|-----+-----------+-------|
+	| GND | 06 GND    | Black |
+	| VCC | 02 5V     | Red   |
+	| SDA | 03 SDA1   | White |
+	| SCL | 05 SDL1   | Yelow |
+	| INT | 08 GPIO14 | Blue  |
+	|     |           |       |
 
 
 ** Actuators
@@ -19,6 +32,7 @@
 	: rosrun calibration_imu magnetometer
 	- total field strength, in nT: 48735.3 nT
 	  #+begin_example
+
 calibration units: tesla (T)
 
  1.0704277446 -0.0554687100 -0.0751259770 -0.0001229154
@@ -43,33 +57,52 @@ calibration units: m/s^2
 *** Host
 	: roslaunch imu_filter_madgwick imu_filter_madgwick.launch
 
-*** jupie_rc
+*** jupie_rc ROS master
 	: export ROS_MASTER_URI=http://user:11311/
 	: roslaunch jupie jupie_rc.launch publish_raw:=false
 
 
-* Paspberry Pi 4b
+** Arduino ECU
+   Development Board Arduino Nano Compatible (ATmega328p + CH340)
+   hadles motor and direction servo PWM and rotary encoder.
+   It use old bootloader compatible with arduino:avr:pro BSP.
 
-** Grove IMU 9DOF
+*** Interface
+   - add rosserial module
+	 : git clone https://github.com/ros-drivers/rosserial.git
+   - generate library bindings and messages
+     : rosrun rosserial_arduino make_libraries.py ~/Arduino/libraries/
 
-   | IMU | RPi4      | Col   |
-   |-----+-----------+-------|
-   | GND | 06 GND    | Black |
-   | VCC | 02 5V     | Red   |
-   | SDA | 03 SDA1   | White |
-   | SCL | 05 SDL1   | Yelow |
-   | INT | 08 GPIO14 | Blue  |
-   |     |           |       |
+   - compile and upload sketch file with arduino/Makefile
+	 : arduino-cli sketch new hello_node
+	 : make SRC=hello_node/ build
+	 Stop serial node and upload firmware
+	 : make SRC=hello_node/ upload
+	 Start serial node and test
+	 : rostopic echo /chatter
 
-* NANO v3 AtMega 328p development board, compatible with Arduino
+** NANO v3 AtMega 328p development board, compatible with Arduino
 
-** GY-302 Ligth sensor
+*** GY-302 Ligth sensor
 
-   | LS   | AR  | Col    |
-   |------+-----+--------|
-   | VCC  | +5v | Red    |
-   | GND  | GND | Brown  |
-   | SCL  | A4  | Orange |
-   | SDA  | A5  | Yellow |
-   | ADDR | NUL | Green  |
-   |      |     |        |
+	| LS   | AR  | Col    |
+	|------+-----+--------|
+	| VCC  | +5v | Red    |
+	| GND  | GND | Brown  |
+	| SCL  | A4  | Orange |
+	| SDA  | A5  | Yellow |
+	| ADDR | NUL | Green  |
+	|      |     |        |
+
+
+* REFERENCES
+  - [1] Development of a mechatronical platform for AUTOSAR
+    The ball-balancing robot Master of Science Thesis, ANDRÉ ALSTRIN, EMIL SUNDELL
+	https://publications.lib.chalmers.se/records/fulltext/225052/225052.pdf
+
+* TODO FIXES [0/4]
+  - [ ] recalibrate gravitometer
+  - [ ] move filter to RC
+  - [ ] Launches main modules for work in autonomous mode
+  - [ ] the base controller, uses dwa_local_planner (by default included in launch)
+  - [ ] sphinx documentation reindexing ref. [1]
