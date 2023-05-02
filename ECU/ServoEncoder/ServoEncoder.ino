@@ -29,3 +29,11 @@ void loop() {
   delay(15);                           // waits for the servo to get there
 
 }
+
+// Stiring  PWM - Left 135 <-45-> 90 <-45-> 45 Right
+// Rigt 309 54
+// Left 793 139
+
+// (309 + 793) / 2 = 551
+
+//
