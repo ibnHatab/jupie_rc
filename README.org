@@ -46,3 +46,30 @@ calibration units: m/s^2
 *** jupie_rc
 	: export ROS_MASTER_URI=http://user:11311/
 	: roslaunch jupie jupie_rc.launch publish_raw:=false
+
+
+* Paspberry Pi 4b
+
+** Grove IMU 9DOF
+
+   | IMU | RPi4      | Col   |
+   |-----+-----------+-------|
+   | GND | 06 GND    | Black |
+   | VCC | 02 5V     | Red   |
+   | SDA | 03 SDA1   | White |
+   | SCL | 05 SDL1   | Yelow |
+   | INT | 08 GPIO14 | Blue  |
+   |     |           |       |
+
+* NANO v3 AtMega 328p development board, compatible with Arduino
+
+** GY-302 Ligth sensor
+
+   | LS   | AR  | Col    |
+   |------+-----+--------|
+   | VCC  | +5v | Red    |
+   | GND  | GND | Brown  |
+   | SCL  | A4  | Orange |
+   | SDA  | A5  | Yellow |
+   | ADDR | NUL | Green  |
+   |      |     |        |
