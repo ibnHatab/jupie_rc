@@ -92,8 +92,30 @@ calibration units: m/s^2
 	| SCL  | A4  | Orange |
 	| SDA  | A5  | Yellow |
 	| ADDR | NUL | Green  |
-	|      |     |        |
+	
 
+*** IR sensor
+	| LS  | AR  | Col  |
+	|-----+-----+------|
+	| VCC | +5v | Grey |
+	| GND | GND | Mow  |
+	| S   | A5  | Blue |
+
+** Servo
+	| Srv | AR  | Col    |
+	|-----+-----+--------|
+	| GND | GND | Black  |
+	| PWM | D9  | Orange |
+	| PWM | D6  | Yellow |
+
+** Battery
+   - LiPo 2S 7.4v 37Wh
+
+*** Effective idle power 8v*385mA (3W)
+	- Rpi4 5v*1010mA (5.1W)
+	- Arduino 5v*33mA (1.65W)
+	Max at 6.7W approx 5h
+	- Motor and servo ??
 
 * REFERENCES
   - [1] Development of a mechatronical platform for AUTOSAR

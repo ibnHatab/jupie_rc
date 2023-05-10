@@ -1,0 +1,6 @@
+{
+    "configuration": "cpu=16MHzatmega328",
+    "board": "arduino:avr:pro",
+    "sketch": "ECU/ros_wheel_speed/ros_wheel_speed.ino",
+    "port": "/dev/ttyUSB0"
+}
